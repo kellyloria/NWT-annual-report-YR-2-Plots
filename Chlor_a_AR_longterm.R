@@ -249,8 +249,6 @@ legend("topleft", legend=c("Inlet", "Outlet", "0m", "3m", "9m"),
 #dev.off()
 
 
-
-
 # plot chlor-a for in lake averages and pca for extened summer add in linear model 
 qplot(sumallPC1, chl_a, data = comb_dat_L_WQ, geom="point", ylab = "Average annual in lake chlor-a") + 
   geom_smooth(method = "lm") +
