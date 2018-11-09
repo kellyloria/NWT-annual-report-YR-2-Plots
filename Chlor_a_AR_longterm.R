@@ -17,7 +17,6 @@ library(lmerTest)
 # choose NWT_sumallPCclimate_19822017.csv
 dt_summer <- read.csv(file.choose())
 head(dt_summer)
-# x axis with PC1: earlier <---> later in summer
 
 # load on water quality data with chla values:
 # water_quality_GLV.dm.data_KL_11_07_2018.csv

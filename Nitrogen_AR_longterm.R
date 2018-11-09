@@ -129,7 +129,7 @@ png("TDN overtime(all locations).png",
     res = 1200,
     pointsize = 4 )
 
-## Average annual chla for all lake locations
+## Average annual TDN for all lake locations
 
 plot(NA, NA, xlim = c(1998, 2016), ylim = c(0, 32), xlab = "Year",
      ylab = "Average annual TDN in GL4", cex.lab=1.5, cex.axis=1.2, 
@@ -229,7 +229,7 @@ max_annual_TDN <- rbind(WCdat_IN_max, WCdat_out_max,
 all_TDN_combined_dat_max <- left_join(max_annual_TDN, dt_summer[c("eco_year", "sumallPC1")],
                                   by = c("year" = "eco_year"))
 
-## Average annual chla for all lake locations
+## Annual max TDN for all lake locations
 
 png("TDN max overtime(all locations).png",  
     width = 5.25,
