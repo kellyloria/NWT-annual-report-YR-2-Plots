@@ -333,7 +333,7 @@ qplot(sumallPC1, chl_a, data = comb_dat_all_WQ, geom="point", ylab = "Average an
 #ggsave("PCA_all_ave_chla.pdf",
 #       scale = 2, width = 6, height = 5.25, units = c("cm"), dpi = 300)
 
-chlora.mod_1yr <- glm(chl_a ~ scale(sumallPC1), data = comb_dat_all_WQ)
+chlora.mod_1yr <- lmer(chl_a ~ scale(sumallPC1) + (1|depth), data = comb_dat_all_WQ)
 summary(chlora.mod_1yr) # year average not significant
 
 
@@ -362,7 +362,7 @@ PCA_allinlake_ave_chla_plot + scale_colour_manual(values = c("darkolivegreen3", 
 ggsave("PCA_allinlake_ave_chla.pdf",
        scale = 2, width = 6, height = 5.25, units = c("cm"), dpi = 300)
 
-chlora.mod_inlake <- glm(chl_a ~ scale(sumallPC1) + depth, data = comb_dat_inlake_WQ)
+chlora.mod_inlake <- lmer(chl_a ~ scale(sumallPC1) + (1|depth), data = comb_dat_inlake_WQ)
 summary(chlora.mod_inlake) # year average not significant
 
 # plot chlor-a for in lake surface averages and pca for extened summer add in linear model 
@@ -397,7 +397,7 @@ PCA_INOUT_ave_chla+scale_colour_manual(values = c("lightseagreen", "cadetblue3")
 
 ggsave("PCA_INOUT_ave_chla.pdf", scale = 2, width = 6, height = 5.25, units = c("cm"), dpi = 300)
 
-chlora.mod_IN_OUT <- glm(chl_a ~ scale(sumallPC1) + depth, data = comb_dat_INOUT_WQ)
+chlora.mod_IN_OUT <- lmer(chl_a ~ scale(sumallPC1) + (1|depth), data = comb_dat_INOUT_WQ)
 summary(chlora.mod_IN_OUT)
 
 
@@ -498,7 +498,7 @@ png("Chlor_A-max_overtime(all locations).png",
 ## Average annual chla for all lake locations
 
 plot(NA, NA, xlim = c(2000, 2017), ylim = c(0, 21), xlab = "Year",
-     ylab = "Average annual chlor-A in GL4", cex.lab=1.5, cex.axis=1.2, 
+     ylab = "Max annual chlor-A in GL4", cex.lab=1.5, cex.axis=1.2, 
      xaxt="n")
 axis(1, at=c(2000:2017), cex.axis=1.5)
 
