@@ -554,3 +554,127 @@ ggsave("PCA_max_chla.pdf",
 chlora.mod_all_max <- glm(chl_a ~ scale(sumallPC1), data = comb_dat_all_max_WQ)
 summary(chlora.mod_all_max)
 
+
+
+
+##########################
+## For Zoop comparison ##
+#########################
+
+
+# load in extended summer PCA values 
+# choose NWT_sumallPCclimate_19822017.csv
+dt_summer <- read.csv(file.choose())
+head(dt_summer)
+
+# load zooplankton data 
+infile1  <- "https://pasta.lternet.edu/package/data/eml/knb-lter-nwt/161/1/9b37e40db2134f4f163cdac258d54560" 
+infile1 <- sub("^https","http",infile1) 
+dt1 <-read.csv(infile1,header=F 
+               ,skip=1
+               ,sep=","  
+               ,quot='"' 
+               , col.names=c(
+                 "LTER_site",     
+                 "local_site",     
+                 "year",     
+                 "date",     
+                 "depth",     
+                 "net_um",     
+                 "water_sampled",     
+                 "taxon_name",     
+                 "num_of_taxon",     
+                 "taxon_dens",     
+                 "avg_taxon_length",     
+                 "tot_indiv_meas",     
+                 "tot_counted",     
+                 "tot_density"    ), check.names=TRUE)
+
+
+# Fix any interval or ratio columns mistakenly read in as nominal and nominal columns read as numeric or dates read as strings
+
+if (class(dt1$LTER_site)!="factor") dt1$LTER_site<- as.factor(dt1$LTER_site)
+if (class(dt1$local_site)!="factor") dt1$local_site<- as.factor(dt1$local_site)                                   
+# attempting to convert dt1$date dateTime string to R date structure (date or POSIXct)                                
+tmpDateFormat<-"%Y-%m-%d"
+tmp1date<-as.Date(dt1$date,format=tmpDateFormat)
+# Keep the new dates only if they all converted correctly
+if(length(tmp1date) == length(tmp1date[!is.na(tmp1date)])){dt1$date <- tmp1date } else {print("Date conversion failed for dt1$date. Please inspect the data and do the date conversion yourself.")}                                                                    
+rm(tmpDateFormat,tmp1date) 
+if (class(dt1$depth)=="factor") dt1$depth <-as.numeric(levels(dt1$depth))[as.integer(dt1$depth) ]
+if (class(dt1$net_um)=="factor") dt1$net_um <-as.numeric(levels(dt1$net_um))[as.integer(dt1$net_um) ]
+if (class(dt1$water_sampled)=="factor") dt1$water_sampled <-as.numeric(levels(dt1$water_sampled))[as.integer(dt1$water_sampled) ]
+if (class(dt1$taxon_name)!="factor") dt1$taxon_name<- as.factor(dt1$taxon_name)
+if (class(dt1$num_of_taxon)=="factor") dt1$num_of_taxon <-as.numeric(levels(dt1$num_of_taxon))[as.integer(dt1$num_of_taxon) ]
+if (class(dt1$taxon_dens)=="factor") dt1$taxon_dens <-as.numeric(levels(dt1$taxon_dens))[as.integer(dt1$taxon_dens) ]
+if (class(dt1$avg_taxon_length)=="factor") dt1$avg_taxon_length <-as.numeric(levels(dt1$avg_taxon_length))[as.integer(dt1$avg_taxon_length) ]
+if (class(dt1$tot_indiv_meas)=="factor") dt1$tot_indiv_meas <-as.numeric(levels(dt1$tot_indiv_meas))[as.integer(dt1$tot_indiv_meas) ]
+if (class(dt1$tot_counted)=="factor") dt1$tot_counted <-as.numeric(levels(dt1$tot_counted))[as.integer(dt1$tot_counted) ]
+if (class(dt1$tot_density)=="factor") dt1$tot_density <-as.numeric(levels(dt1$tot_density))[as.integer(dt1$tot_density) ]
+
+# Here is the structure of the input data frame:
+str(dt1)                            
+attach(dt1) 
+
+# function to calculate standard error around the mean 
+se <- function(x) {sd(x,na.rm=TRUE)/sqrt(length(x))}
+
+## annual max all zoop densities GL4
+zoop_den_max <- aggregate(tot_density ~ year, data=dt1, FUN=max) 
+zoop_den_max$SE <- aggregate(tot_density ~ year, data=dt1, FUN=se)[,2]
+names(zoop_den_max)[2]<-"taxon_dens"
+zoop_den_max$label <- "all"
+
+
+png("Zoop_mden_chlom_0vertime.png",  
+    width = 5.25,
+    height = 3.25,
+    units = "in",
+    res = 1200,
+    pointsize = 4 )
+
+
+plot(NA, NA, xlim = c(2000, 2017), ylim = c(0, 21), xlab = "Year",
+     ylab = "Max annual chlor-A in GL4", cex.lab=1.5, cex.axis=1.2, 
+     xaxt="n")
+axis(1, at=c(2000:2017), cex.axis=1.5)
+
+lines(y = WQdat_0m_max$chl_a,  x= WQdat_0m_max$year, lty =1, lwd = 1, col= "darkolivegreen3")
+lines(y = WQdat_3m_max$chl_a,  x= WQdat_3m_max$year, lty =1, lwd = 1, col= "darkolivegreen4")
+lines(y = WQdat_9m_max$chl_a,  x= WQdat_9m_max$year, lty =1, lwd = 1, col= "darkgreen")
+
+
+points(y = WQdat_0m_max$chl_a, x= WQdat_0m_max$year, col= "darkolivegreen3", pch=19) 
+arrows(WQdat_0m_max$year, (WQdat_0m_max$chl_a + WQdat_0m_max$SE), 
+       WQdat_0m_max$year, (WQdat_0m_max$chl_a - WQdat_0m_max$SE), 
+       length=0.0, code=3, lwd=0.5, col= "darkolivegreen3")
+
+points(y = WQdat_3m_max$chl_a, x= WQdat_3m_max$year, col= "darkolivegreen4", pch=19) 
+arrows(WQdat_3m_max$year, (WQdat_3m_max$chl_a + WQdat_3m_max$SE), 
+       WQdat_3m_max$year, (WQdat_3m_max$chl_a - WQdat_3m_max$SE), 
+       length=0.0, code=3, lwd=0.5, col= "darkolivegreen4")
+
+points(y = WQdat_9m_max$chl_a, x= WQdat_9m_max$year, col= "darkgreen", pch=19) 
+arrows(WQdat_9m_max$year, (WQdat_9m_max$chl_a + WQdat_9m_max$SE), 
+       WQdat_9m_max$year, (WQdat_9m_max$chl_a - WQdat_9m_max$SE), 
+       length=0.0, code=3, lwd=0.5, col= "darkgreen")
+
+
+# add in zoop
+## Allow a second plot on the same graph
+par(new=TRUE)
+plot(zoop_den_max$year, zoop_den_max$taxon_dens,type = "l", xaxt = "n", yaxt = "n",
+     ylab = "", xlab = "", col = "tomato3", lty = 1)
+axis(side = 4, ylim= c(0, 20))
+
+
+lines(y = zoop_den_max$taxon_dens,  x= zoop_den_max$year, lty =1, lwd = 1, col= "tomato3")
+points(y = zoop_den_max$taxon_dens, x= zoop_den_max$year, col= "tomato3", pch=19) 
+arrows(zoop_den_max$year, (zoop_den_max$taxon_dens + zoop_den_max$SE), 
+       zoop_den_max$year, (zoop_den_max$taxon_dens - zoop_den_max$SE), 
+       length=0.0, code=3, lwd=0.5, col= "tomato3")
+
+legend("topright", legend=c("0m", "3m", "9m", "Zoop density"),
+       col=c("darkolivegreen3", "darkolivegreen4", "darkgreen", "tomato3" ), lty=1, cex=1.2)
+
+dev.off()
