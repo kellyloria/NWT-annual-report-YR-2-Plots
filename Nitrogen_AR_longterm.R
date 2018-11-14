@@ -123,55 +123,55 @@ all_TDN_combined_dat <- left_join(ave_annual_TDN, dt_summer[c("eco_year", "sumal
 
 
 png("TDN overtime(all locations).png",  
-    width = 5.25,
-    height = 3.25,
+    width = 7.5,
+    height = 4.2,
     units = "in",
     res = 1200,
-    pointsize = 4 )
+    pointsize = 8)
 
 ## Average annual TDN for all lake locations
 
 plot(NA, NA, xlim = c(1998, 2016), ylim = c(0, 32), xlab = "Year",
      ylab = "Average annual TDN in GL4", cex.lab=1.5, cex.axis=1.2, 
      xaxt="n")
-axis(1, at=c(1998:2016), cex.axis=1.5)
+axis(1, at=c(1998:2016), cex.axis=1.2)
 
-lines(y = WCdat_IN_ave$TDN, x= WCdat_IN_ave$year, lty =1, lwd = 1, col= "lightseagreen")
-lines(y = WCdat_out_ave$TDN,  x= WCdat_out_ave$year, lty =1, lwd = 1, col= "cadetblue3")
-lines(y = WCdat_0m_ave$TDN,  x= WCdat_0m_ave$year, lty =1, lwd = 1, col= "darkolivegreen3")
-lines(y = WCdat_3m_ave$TDN,  x= WCdat_3m_ave$year, lty =1, lwd = 1, col= "darkolivegreen4")
-lines(y = WCdat_9m_ave$TDN,  x= WCdat_9m_ave$year, lty =1, lwd = 1, col= "darkgreen")
+lines(y = WCdat_IN_ave$TDN, x= WCdat_IN_ave$year, lty =1, lwd = 2, col= "lightseagreen")
+lines(y = WCdat_out_ave$TDN,  x= WCdat_out_ave$year, lty =1, lwd = 2, col= "cadetblue3")
+lines(y = WCdat_0m_ave$TDN,  x= WCdat_0m_ave$year, lty =1, lwd = 2, col= "darkolivegreen3")
+lines(y = WCdat_3m_ave$TDN,  x= WCdat_3m_ave$year, lty =1, lwd = 2, col= "darkolivegreen4")
+lines(y = WCdat_9m_ave$TDN,  x= WCdat_9m_ave$year, lty =1, lwd = 2, col= "darkgreen")
 
 
 points(y = WCdat_IN_ave$TDN, x= WCdat_IN_ave$year, col= "lightseagreen", pch=19) 
 arrows(WCdat_IN_ave$year, (WCdat_IN_ave$TDN + WCdat_IN_ave$SE), 
        WCdat_IN_ave$year, (WCdat_IN_ave$TDN - WCdat_IN_ave$SE), 
-       length=0.0, code=3, lwd=0.5, col= "lightseagreen")
+       length=0.0, code=3, lwd=1, col= "lightseagreen")
 
 
 points(y = WCdat_out_ave$TDN, x= WCdat_out_ave$year, col= "cadetblue3", pch=19) 
 arrows(WCdat_out_ave$year, (WCdat_out_ave$TDN + WCdat_out_ave$SE), 
        WCdat_out_ave$year, (WCdat_out_ave$TDN - WCdat_out_ave$SE), 
-       length=0.0, code=3, lwd=0.5, col= "cadetblue3")
+       length=0.0, code=3, lwd=1, col= "cadetblue3")
 
 points(y = WCdat_0m_ave$TDN, x= WCdat_0m_ave$year, col= "darkolivegreen3", pch=19) 
 arrows(WCdat_0m_ave$year, (WCdat_0m_ave$TDN + WCdat_0m_ave$SE), 
        WCdat_0m_ave$year, (WCdat_0m_ave$TDN - WCdat_0m_ave$SE), 
-       length=0.0, code=3, lwd=0.5, col= "darkolivegreen3")
+       length=0.0, code=3, lwd=1, col= "darkolivegreen3")
 
 points(y = WCdat_3m_ave$TDN, x= WCdat_3m_ave$year, col= "darkolivegreen4", pch=19) 
 arrows(WCdat_3m_ave$year, (WCdat_3m_ave$TDN + WCdat_3m_ave$SE), 
        WCdat_3m_ave$year, (WCdat_3m_ave$TDN - WCdat_3m_ave$SE), 
-       length=0.0, code=3, lwd=0.5, col= "darkolivegreen4")
+       length=0.0, code=3, lwd=1, col= "darkolivegreen4")
 
 points(y = WCdat_9m_ave$TDN, x= WCdat_9m_ave$year, col= "darkgreen", pch=19) 
 arrows(WCdat_9m_ave$year, (WCdat_9m_ave$TDN + WCdat_9m_ave$SE), 
        WCdat_9m_ave$year, (WCdat_9m_ave$TDN - WCdat_9m_ave$SE), 
-       length=0.0, code=3, lwd=0.5, col= "darkgreen")
+       length=0.0, code=3, lwd=1, col= "darkgreen")
 
 
 legend("topright", legend=c("Inlet", "Outlet", "0m", "3m", "9m"),
-       col=c("lightseagreen", "cadetblue3", "darkolivegreen3", "darkolivegreen4", "darkgreen" ), lty=1, cex=1.2)
+       col=c("lightseagreen", "cadetblue3", "darkolivegreen3", "darkolivegreen4", "darkgreen" ), lty=1, lwd=2, cex=1.2)
 
 dev.off()
 
@@ -337,53 +337,53 @@ all_TDN_combined_dat <- left_join(ave_annual_TDN, dt_summer[c("eco_year", "sumal
 
 ###### Nitrate plot
 png("NO3 ave overtime(all locations).png",  
-    width = 5.25,
-    height = 3.25,
+    width = 7.5,
+    height = 4.2,
     units = "in",
     res = 1200,
-    pointsize = 4 )
+    pointsize = 8)
 
 plot(NA, NA, xlim = c(1998, 2016), ylim = c(0, 27), xlab = "Year",
      ylab = "Average annual NO3 in GL4", cex.lab=1.5, cex.axis=1.2, 
      xaxt="n")
-axis(1, at=c(1998:2016), cex.axis=1.5)
+axis(1, at=c(1998:2016), cex.axis=1.2)
 
-lines(y = WCdat_IN_NO3_ave$NO3., x= WCdat_IN_NO3_ave$year, lty =1, lwd = 1, col= "lightseagreen")
-lines(y = WCdat_out_NO3_ave$NO3.,  x= WCdat_out_NO3_ave$year, lty =1, lwd = 1, col= "cadetblue3")
-lines(y = WCdat_0m_NO3_ave$NO3.,  x= WCdat_0m_NO3_ave$year, lty =1, lwd = 1, col= "darkolivegreen3")
-lines(y = WCdat_3m_NO3_ave$NO3.,  x= WCdat_3m_NO3_ave$year, lty =1, lwd = 1, col= "darkolivegreen4")
-lines(y = WCdat_9m_NO3_ave$NO3.,  x= WCdat_9m_NO3_ave$year, lty =1, lwd = 1, col= "darkgreen")
+lines(y = WCdat_IN_NO3_ave$NO3., x= WCdat_IN_NO3_ave$year, lty =1, lwd = 2, col= "lightseagreen")
+lines(y = WCdat_out_NO3_ave$NO3.,  x= WCdat_out_NO3_ave$year, lty =1, lwd = 2, col= "cadetblue3")
+lines(y = WCdat_0m_NO3_ave$NO3.,  x= WCdat_0m_NO3_ave$year, lty =1, lwd = 2, col= "darkolivegreen3")
+lines(y = WCdat_3m_NO3_ave$NO3.,  x= WCdat_3m_NO3_ave$year, lty =1, lwd = 2, col= "darkolivegreen4")
+lines(y = WCdat_9m_NO3_ave$NO3.,  x= WCdat_9m_NO3_ave$year, lty =1, lwd = 2, col= "darkgreen")
 
 
 points(y = WCdat_IN_NO3_ave$NO3., x= WCdat_IN_NO3_ave$year, col= "lightseagreen", pch=19) 
 arrows(WCdat_IN_NO3_ave$year, (WCdat_IN_NO3_ave$NO3. + WCdat_IN_NO3_ave$SE), 
        WCdat_IN_NO3_ave$year, (WCdat_IN_NO3_ave$NO3. - WCdat_IN_NO3_ave$SE), 
-       length=0.0, code=3, lwd=0.5, col= "lightseagreen")
+       length=0.0, code=3, lwd=1, col= "lightseagreen")
 
 
 points(y = WCdat_out_NO3_ave$NO3., x= WCdat_out_NO3_ave$year, col= "cadetblue3", pch=19) 
 arrows(WCdat_out_NO3_ave$year, (WCdat_out_NO3_ave$NO3. + WCdat_out_NO3_ave$SE), 
        WCdat_out_NO3_ave$year, (WCdat_out_NO3_ave$NO3. - WCdat_out_NO3_ave$SE), 
-       length=0.0, code=3, lwd=0.5, col= "cadetblue3")
+       length=0.0, code=3, lwd=1, col= "cadetblue3")
 
 points(y = WCdat_0m_NO3_ave$NO3., x= WCdat_0m_NO3_ave$year, col= "darkolivegreen3", pch=19) 
 arrows(WCdat_0m_NO3_ave$year, (WCdat_0m_NO3_ave$NO3. + WCdat_0m_NO3_ave$SE), 
        WCdat_0m_NO3_ave$year, (WCdat_0m_NO3_ave$NO3. - WCdat_0m_NO3_ave$SE), 
-       length=0.0, code=3, lwd=0.5, col= "darkolivegreen3")
+       length=0.0, code=3, lwd=1, col= "darkolivegreen3")
 
 points(y = WCdat_3m_NO3_ave$NO3., x= WCdat_3m_NO3_ave$year, col= "darkolivegreen4", pch=19) 
 arrows(WCdat_3m_NO3_ave$year, (WCdat_3m_NO3_ave$NO3. + WCdat_3m_NO3_ave$SE), 
        WCdat_3m_NO3_ave$year, (WCdat_3m_NO3_ave$NO3. - WCdat_3m_NO3_ave$SE), 
-       length=0.0, code=3, lwd=0.5, col= "darkolivegreen4")
+       length=0.0, code=3, lwd=1, col= "darkolivegreen4")
 
 points(y = WCdat_9m_NO3_ave$NO3., x= WCdat_9m_NO3_ave$year, col= "darkgreen", pch=19) 
 arrows(WCdat_9m_NO3_ave$year, (WCdat_9m_NO3_ave$NO3. + WCdat_9m_NO3_ave$SE), 
        WCdat_9m_NO3_ave$year, (WCdat_9m_NO3_ave$NO3. - WCdat_9m_NO3_ave$SE), 
-       length=0.0, code=3, lwd=0.5, col= "darkgreen")
+       length=0.0, code=3, lwd=1, col= "darkgreen")
 
 
 legend("topright", legend=c("Inlet", "Outlet", "0m", "3m", "9m"),
-       col=c("lightseagreen", "cadetblue3", "darkolivegreen3", "darkolivegreen4", "darkgreen" ), lty=1, cex=1.2)
+       col=c("lightseagreen", "cadetblue3", "darkolivegreen3", "darkolivegreen4", "darkgreen" ), lty=1, lwd=2, cex=1.2)
 
 dev.off()
 

@@ -131,40 +131,40 @@ zoop_max_den_Dgroup <- rbind(cop_den_max, clad_den_max)
 
 
 png("Zoop_ave_den_overtime.png",  
-    width = 5.25,
-    height = 3.25,
+    width = 7.5,
+    height = 4.2,
     units = "in",
     res = 1200,
-    pointsize = 4 )
+    pointsize = 8)
 
 plot(NA, NA, xlim = c(2012, 2017), ylim = c(0, 8.5), xlab = "Year",
      ylab = "Taxon average density in GL4 (perL)", cex.lab=1.5, cex.axis=1.2, 
      xaxt="n")
-axis(1, at=c(2012:2017), cex.axis=1.5)
+axis(1, at=c(2012:2017), cex.axis=1.2)
 
-lines(y = clad_den_ave$taxon_dens, x= clad_den_ave$year, lty =1, lwd = 1, col= "sienna1")
-lines(y = cop_den_ave$taxon_dens,  x= cop_den_ave$year, lty =1, lwd = 1, col= "tomato")
-lines(y = zoop_den_ave$taxon_dens,  x= zoop_den_ave$year, lty =1, lwd = 1, col= "tomato3")
+lines(y = clad_den_ave$taxon_dens, x= clad_den_ave$year, lty =1, lwd = 2, col= "sienna1")
+lines(y = cop_den_ave$taxon_dens,  x= cop_den_ave$year, lty =1, lwd = 2, col= "tomato")
+lines(y = zoop_den_ave$taxon_dens,  x= zoop_den_ave$year, lty =1, lwd = 2, col= "tomato3")
 
 
 points(y = clad_den_ave$taxon_dens, x= clad_den_ave$year, col= "sienna1", pch=19) 
 arrows(clad_den_ave$year, (clad_den_ave$taxon_dens + clad_den_ave$SE), 
        clad_den_ave$year, (clad_den_ave$taxon_dens - clad_den_ave$SE), 
-       length=0.0, code=3, lwd=0.5, col= "sienna1")
+       length=0.0, code=3, lwd=1, col= "sienna1")
 
 
 points(y = cop_den_ave$taxon_dens, x= cop_den_ave$year, col= "tomato", pch=19) 
 arrows(cop_den_ave$year, (cop_den_ave$taxon_dens + cop_den_ave$SE), 
        cop_den_ave$year, (cop_den_ave$taxon_dens - cop_den_ave$SE), 
-       length=0.0, code=3, lwd=0.5, col= "tomato")
+       length=0.0, code=3, lwd=1, col= "tomato")
 
 points(y = zoop_den_ave$taxon_dens, x= zoop_den_ave$year, col= "tomato3", pch=19) 
 arrows(zoop_den_ave$year, (zoop_den_ave$taxon_dens + zoop_den_ave$SE), 
        zoop_den_ave$year, (zoop_den_ave$taxon_dens - zoop_den_ave$SE), 
-       length=0.0, code=3, lwd=0.5, col= "tomato3")
+       length=0.0, code=3, lwd=1, col= "tomato3")
 
 legend("topright", legend=c("Cladoceran", "Copepod", "All taxa"),
-       col=c("sienna1", "tomato", "tomato3"), lty=1, cex=1.2)
+       col=c("sienna1", "tomato", "tomato3"), lty=1, lwd=2, cex=1.2)
 
 dev.off()
 
@@ -225,6 +225,17 @@ comb_dat_Dzoop_max <- left_join(zoop_max_den_Dgroup, dt_summer[c("eco_year", "su
                                 by = c("year" = "eco_year"))
 
 
+all_den <- subset(dt1, taxon_name=="Chydoridae sp." | taxon_name=="Daphnia pulicaria" 
+                  | taxon_name=="Hesperodiaptomus shoshone" | taxon_name=="Nauplii "
+                  | taxon_name=="Neonate"| taxon_name=="Bosminidae sp.",
+                  select=LTER_site:tot_density)
+summary(all_den$taxon_name) 
+
+
+
+comb_dat_all_raw <- left_join(all_den, dt_summer[c("eco_year", "sumallPC1")],
+                                by = c("year" = "eco_year"))
+
 ##### PCA Plots######
 
 ave_zoop_plot <- qplot(sumallPC1, taxon_dens, data = comb_dat_zoop_ave, geom="point", ylab = "Average annual taxa density", color=label) + 
@@ -278,3 +289,9 @@ summary(Dzoop.mod_max_all)
 Dzoop.mod_max_all.1 <- lmer(taxon_dens ~ scale(sumallPC1) + (1|label), data = comb_dat_Dzoop_max)
 summary(Dzoop.mod_max_all.1)
 
+names(dt1)
+head(dt1)
+dt1$taxon_dens
+
+zoop.mod_all <- glm(taxon_dens ~ scale(sumallPC1), data = comb_dat_all_raw)
+summary(zoop.mod_all)

@@ -163,100 +163,99 @@ comb_dat_lake_WQ <- left_join(chlor_ave_all, dt_summer[c("eco_year", "sumallPC1"
 ### Visualize relationships of Chlor overtime by observation location ###
 
 
-#png("Chlor_A overtime(all locations).png",  
-#    width = 5.25,
-#    height = 3.25,
-#    units = "in",
-#    res = 1200,
-#    pointsize = 4 )
-
-## Average annual chla for all lake locations
+png("Chlor_A overtime(all locations).png",  
+    width = 7.5,
+    height = 4.2,
+    units = "in",
+    res = 1200,
+    pointsize = 8)
 
 plot(NA, NA, xlim = c(2000, 2017), ylim = c(0, 10), xlab = "Year",
      ylab = "Average annual chlor-A in GL4", cex.lab=1.5, cex.axis=1.2, 
      xaxt="n")
-axis(1, at=c(2000:2017), cex.axis=1.5)
+axis(1, at=c(2000:2017), cex.axis=1.5, padj = 0.25)
 
-lines(y = WQdat_IN_ave$chl_a, x= WQdat_IN_ave$year, lty =1, lwd = 1, col= "lightseagreen")
-lines(y = WQdat_out_ave$chl_a,  x= WQdat_out_ave$year, lty =1, lwd = 1, col= "cadetblue3")
-lines(y = WQdat_0m_ave$chl_a,  x= WQdat_0m_ave$year, lty =1, lwd = 1, col= "darkolivegreen3")
-lines(y = WQdat_3m_ave$chl_a,  x= WQdat_3m_ave$year, lty =1, lwd = 1, col= "darkolivegreen4")
-lines(y = WQdat_9m_ave$chl_a,  x= WQdat_9m_ave$year, lty =1, lwd = 1, col= "darkgreen")
+lines(y = WQdat_IN_ave$chl_a, x= WQdat_IN_ave$year, lty =1, lwd = 2, col= "lightseagreen")
+lines(y = WQdat_out_ave$chl_a,  x= WQdat_out_ave$year, lty =1, lwd = 2, col= "cadetblue3")
+lines(y = WQdat_0m_ave$chl_a,  x= WQdat_0m_ave$year, lty =1, lwd = 2, col= "darkolivegreen3")
+lines(y = WQdat_3m_ave$chl_a,  x= WQdat_3m_ave$year, lty =1, lwd = 2, col= "darkolivegreen4")
+lines(y = WQdat_9m_ave$chl_a,  x= WQdat_9m_ave$year, lty =1, lwd = 2, col= "darkgreen")
 
 
 points(y = WQdat_IN_ave$chl_a, x= WQdat_IN_ave$year, col= "lightseagreen", pch=19) 
 arrows(WQdat_IN_ave$year, (WQdat_IN_ave$chl_a + WQdat_IN_ave$SE), 
        WQdat_IN_ave$year, (WQdat_IN_ave$chl_a - WQdat_IN_ave$SE), 
-       length=0.0, code=3, lwd=0.5, col= "lightseagreen")
+       length=0.0, code=3, lwd=1, col= "lightseagreen")
 
 
 points(y = WQdat_out_ave$chl_a, x= WQdat_out_ave$year, col= "cadetblue3", pch=19) 
 arrows(WQdat_out_ave$year, (WQdat_out_ave$chl_a + WQdat_out_ave$SE), 
        WQdat_out_ave$year, (WQdat_out_ave$chl_a - WQdat_out_ave$SE), 
-       length=0.0, code=3, lwd=0.5, col= "cadetblue3")
+       length=0.0, code=3, lwd=1, col= "cadetblue3")
 
 points(y = WQdat_0m_ave$chl_a, x= WQdat_0m_ave$year, col= "darkolivegreen3", pch=19) 
 arrows(WQdat_0m_ave$year, (WQdat_0m_ave$chl_a + WQdat_0m_ave$SE), 
        WQdat_0m_ave$year, (WQdat_0m_ave$chl_a - WQdat_0m_ave$SE), 
-       length=0.0, code=3, lwd=0.5, col= "darkolivegreen3")
+       length=0.0, code=3, lwd=1, col= "darkolivegreen3")
 
 points(y = WQdat_3m_ave$chl_a, x= WQdat_3m_ave$year, col= "darkolivegreen4", pch=19) 
 arrows(WQdat_3m_ave$year, (WQdat_3m_ave$chl_a + WQdat_3m_ave$SE), 
        WQdat_3m_ave$year, (WQdat_3m_ave$chl_a - WQdat_3m_ave$SE), 
-       length=0.0, code=3, lwd=0.5, col= "darkolivegreen4")
+       length=0.0, code=3, lwd=1, col= "darkolivegreen4")
 
 points(y = WQdat_9m_ave$chl_a, x= WQdat_9m_ave$year, col= "darkgreen", pch=19) 
 arrows(WQdat_9m_ave$year, (WQdat_9m_ave$chl_a + WQdat_9m_ave$SE), 
        WQdat_9m_ave$year, (WQdat_9m_ave$chl_a - WQdat_9m_ave$SE), 
-       length=0.0, code=3, lwd=0.5, col= "darkgreen")
+       length=0.0, code=3, lwd=1, col= "darkgreen")
 
 
 legend("topleft", legend=c("Inlet", "Outlet", "0m", "3m", "9m"),
-       col=c("lightseagreen", "cadetblue3", "darkolivegreen3", "darkolivegreen4", "darkgreen" ), lty=1, cex=1.2)
+       col=c("lightseagreen", "cadetblue3", "darkolivegreen3", "darkolivegreen4", "darkgreen" ), lty=1, lwd=2, cex=1.2)
 
-#dev.off()
+dev.off()
 
 
 
-#png("Chlor_A overtime(surface,meta,hypo).png",  
-#    width = 5.25,
-#    height = 3.25,
-#    units = "in",
-#    res = 1200,
-#    pointsize = 4 )
+png("Chlor_A overtime(surface,meta,hypo).png",  
+    width = 7.5,
+    height = 4.2,
+    units = "in",
+    res = 1200,
+    pointsize = 8)
 
 ## Average annual chla for within lake locations
 
 plot(NA, NA, xlim = c(2000, 2017), ylim = c(0, 10), xlab = "Year",
-     ylab = "Average annual chlor-A in GL4", cex.lab=1.5, cex.axis=1.2, 
+     ylab = "Average annual chlor-A in GL4", cex.lab=1.25, cex.axis=1.25, 
      xaxt="n")
-axis(1, at=c(2000:2017), cex.axis=1.5)
+axis(1, at=c(2000:2017), cex.axis=1.25, padj = 0.25)
 
-lines(y = WQdat_0m_ave$chl_a,  x= WQdat_0m_ave$year, lty =1, lwd = 1, col= "darkolivegreen3")
-lines(y = WQdat_3m_ave$chl_a,  x= WQdat_3m_ave$year, lty =1, lwd = 1, col= "darkolivegreen4")
-lines(y = WQdat_9m_ave$chl_a,  x= WQdat_9m_ave$year, lty =1, lwd = 1, col= "darkgreen")
+?axis
+lines(y = WQdat_0m_ave$chl_a,  x= WQdat_0m_ave$year, lty =1, lwd = 2, col= "darkolivegreen3")
+lines(y = WQdat_3m_ave$chl_a,  x= WQdat_3m_ave$year, lty =1, lwd = 2, col= "darkolivegreen4")
+lines(y = WQdat_9m_ave$chl_a,  x= WQdat_9m_ave$year, lty =1, lwd = 2, col= "darkgreen")
 
 points(y = WQdat_0m_ave$chl_a, x= WQdat_0m_ave$year, col= "darkolivegreen3", pch=19) 
 arrows(WQdat_0m_ave$year, (WQdat_0m_ave$chl_a + WQdat_0m_ave$SE), 
        WQdat_0m_ave$year, (WQdat_0m_ave$chl_a - WQdat_0m_ave$SE), 
-       length=0.0, code=3, lwd=0.5, col= "darkolivegreen3")
+       length=0.0, code=3, lwd=1, col= "darkolivegreen3")
 
 points(y = WQdat_3m_ave$chl_a, x= WQdat_3m_ave$year, col= "darkolivegreen4", pch=19) 
 arrows(WQdat_3m_ave$year, (WQdat_3m_ave$chl_a + WQdat_3m_ave$SE), 
        WQdat_3m_ave$year, (WQdat_3m_ave$chl_a - WQdat_3m_ave$SE), 
-       length=0.0, code=3, lwd=0.5, col= "darkolivegreen4")
+       length=0.0, code=3, lwd=1, col= "darkolivegreen4")
 
 
 points(y = WQdat_9m_ave$chl_a, x= WQdat_9m_ave$year, col= "darkgreen", pch=19) 
 arrows(WQdat_9m_ave$year, (WQdat_9m_ave$chl_a + WQdat_9m_ave$SE), 
        WQdat_9m_ave$year, (WQdat_9m_ave$chl_a - WQdat_9m_ave$SE), 
-       length=0.0, code=3, lwd=0.5, col= "darkgreen")
+       length=0.0, code=3, lwd=1, col= "darkgreen")
 
 
 legend("topleft", legend=c("Inlet", "Outlet", "0m", "3m", "9m"),
-       col=c("lightseagreen", "cadetblue3", "darkolivegreen3", "darkolivegreen4", "darkgreen" ), lty=1, cex=1.2)
+       col=c("lightseagreen", "cadetblue3", "darkolivegreen3", "darkolivegreen4", "darkgreen" ), lty=1, lwd=2, cex=1.2)
 
-#dev.off()
+dev.off()
 
 
 #png("Chlor_A overtime(hypo).png",  
@@ -678,3 +677,9 @@ legend("topright", legend=c("0m", "3m", "9m", "Zoop density"),
        col=c("darkolivegreen3", "darkolivegreen4", "darkgreen", "tomato3" ), lty=1, cex=1.2)
 
 dev.off()
+
+
+chlora.mod_all_max <- glm(chl_a ~ scale(sumallPC1) + location, data = comb_dat_WQ)
+summary(chlora.mod_all_max)
+
+comb_dat_WQ
