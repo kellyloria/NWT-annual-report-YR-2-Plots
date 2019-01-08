@@ -12,6 +12,13 @@ library(tidyverse)
 library(lme4)
 library(lmerTest)
 
+library(gtable)
+library(MuMIn) # forr squared
+library(nlme)
+library(car)
+library(ggplot2)
+library(gridExtra)
+
 
 # load in extended summer PCA values 
 # choose NWT_sumallPCclimate_19822017.csv
@@ -682,4 +689,189 @@ dev.off()
 chlora.mod_all_max <- glm(chl_a ~ scale(sumallPC1) + location, data = comb_dat_WQ)
 summary(chlora.mod_all_max)
 
-comb_dat_WQ
+###### DOC exploration ########
+#glvwat_DOC.csv
+
+DOC <- read.csv(file.choose())
+names(DOC)
+summary(DOC)
+ 
+doc.mod <- lmer(DOC ~ year + location + (1| local_site), data = DOC)
+summary(doc.mod)
+
+
+ggplot(data = DOC, # data
+       aes(x = year, # aesthetics
+           y = DOC,
+           color = location)) +
+  geom_point() + geom_smooth(method = "lm") +
+  # geom 
+  facet_grid(~local_site) + # facet
+  scale_color_brewer(palette = "Spectral")
+
+######
+# exploration for city of boulder 
+
+chla2018 <- read.csv("water_quality_GLV.dm.data_KL_12_30_2018.csv", header=T, 
+                na = c("NaN", "DNS",  "EQCL", "N/A", "NP", "NSS", "NV", "u", "QNS", NA, " ", ""))
+names(chla2018)
+chla2018$local_site
+
+max(na.omit(chla2018$chl_a))
+
+CHdat_GL4 <- subset(chla2018, local_site=="GL4",
+                     select=local_site:PAR)
+
+
+CHdat_GL1 <- subset(chla2018, local_site=="GL1",
+                    select=local_site:PAR)
+
+CHdat_ALB <- subset(chla2018, local_site=="ALB",
+                    select=local_site:PAR)
+
+
+CHdat_2005 <- subset(CHdat_GL4, year>1999 & year<2006,
+                    select=local_site:PAR)
+summary(CHdat_2005$year)
+
+CHdat_2010 <- subset(CHdat_GL4, year>2005 & year<2011,
+                     select=local_site:PAR)
+summary(CHdat_2010$year)
+
+CHdat_2015 <- subset(CHdat_GL4, year>2010 & year<2016,
+                     select=local_site:PAR)
+summary(CHdat_2015$year)
+
+CHdat_2018 <- subset(CHdat_GL4, year>2015 & year<2019,
+                     select=local_site:PAR)
+summary(CHdat_2018$year)
+
+mean(na.omit(CHdat_2015$chl_a))
+
+mean(na.omit(CHdat_2018$chl_a))
+
+
+CHdat_2016 <- subset(CHdat_GL4, year==2000,
+                     select=local_site:PAR)
+summary(CHdat_2016$year)
+
+max(na.omit(CHdat_2016$chl_a))
+
+ggplot(data = CHdat_GL4, # data
+       aes(x = year, # aesthetics
+           y = chl_a,
+           color = location)) +
+  geom_point() + geom_smooth(method = "lm")
+
+ggplot(data = CHdat_GL1, # data
+       aes(x = year, # aesthetics
+           y = chl_a,
+           color = location)) +
+  geom_point() + geom_smooth(method = "lm")
+
+ggplot(data = CHdat_ALB, # data
+       aes(x = year, # aesthetics
+           y = chl_a,
+           color = location)) +
+  geom_point() + geom_smooth(method = "lm")
+
+newdat <- rbind(CHdat_ALB, CHdat_GL1, CHdat_GL4)
+
+
+
+ggplot(data = newdat, # data
+       aes(x = year, # aesthetics
+           y = chl_a, 
+           color = local_site)) + ylab("Chla") + xlab("Year") +
+  geom_point() + geom_smooth(method = "lm") + scale_x_continuous(breaks=seq(2000,2018,2)) +
+  # geom 
+  facet_grid(~local_site) + # facet
+  scale_color_brewer(palette = "Set1") + 
+  theme_classic() + theme(text = element_text(size=14), 
+                                axis.text.x = element_text(angle=45, hjust=0.95),
+                                legend.position="none", 
+                                plot.margin = unit(c(0.15, 0,0.5,1.2), "cm")) 
+
+?scale_color_brewer
+
+
+
+ggsave("Chla_infocal_lakes_plot.pdf",
+       scale = 2, width = 13, height = 4.75, units = c("cm"), dpi = 300)
+
+
+
+
+chlora.mod <- lmer(chl_a ~ year + location + (1| local_site), data = chla2018)
+summary(chlora.mod) 
+
+chlora.mod1 <- lmer(chl_a ~ year + (1| local_site), data = chla2018)
+summary(chlora.mod1)
+
+chlora.mod2 <- lmer(chl_a ~ year + (1| local_site), data = newdat)
+summary(chlora.mod2)
+
+
+chlora.mod.gl4 <- lmer(chl_a ~ year + (1| location), data = CHdat_GL4)
+summary(chlora.mod.gl4)
+
+chlora.mod.alb <- glm(chl_a ~ year, data = CHdat_ALB)
+summary(chlora.mod.alb)
+
+chlora.mod.gl1 <- glm(chl_a ~ year, data = CHdat_GL1)
+summary(chlora.mod.gl1)
+
+
+#####################
+
+range(na.omit((CHdat_GL4$chl_a)))
+GL4_chl_plot <- ggplot(CHdat_GL4, aes(x = year, y = chl_a )) + ylab("Chla") + xlab("Year") + ggtitle("GL4") +
+  geom_point(aes(colour = as.factor(local_site))) + geom_smooth(method = "glm", colour = 'grey30') +
+  theme_classic() + theme(text = element_text(size=14),
+                          axis.text.x=element_text(angle=45, hjust=0.95),
+                          legend.position="none", 
+                          plot.margin = unit(c(0.15, 0,0.5,0.3), "cm")) + 
+  scale_x_continuous(breaks=seq(2000,2018,2))  + 
+  scale_colour_manual(values = c("dodgerblue4"))
+
+
+range(na.omit((CHdat_GL1$chl_a)))
+GL1_chl_plot <- ggplot(CHdat_GL1, aes(x = year, y = chl_a )) + ylab("Chla") + xlab("Year") + ggtitle("GL1") +
+  geom_point(aes(colour = as.factor(local_site))) +
+  theme_classic() + theme(text = element_text(size=14),
+                          axis.text.x=element_text(angle=45, hjust=0.95),
+                          axis.title.y=element_blank(),
+                          legend.position="none", 
+                          plot.margin = unit(c(0.15, 0.5,0.5,0.95), "cm")) + 
+  scale_x_continuous(breaks=seq(2000,2018,1))  + 
+  scale_colour_manual(values = c("dodgerblue2", "sky blue"))
+
+range(na.omit((CHdat_ALB$chl_a)))
+ALB_chl_plot <- ggplot(CHdat_ALB, aes(x = year, y = chl_a)) + ylab("Chla") + xlab("Year") + ggtitle("Albion") +
+  geom_point(aes(colour = as.factor(local_site))) +
+  theme_classic() + theme(text = element_text(size=14),
+                          axis.text.x=element_text(angle=45, hjust=0.95),
+                          axis.title.y=element_blank(),
+                          legend.position="none", 
+                          plot.margin = unit(c(0.15, 2,0.5,0), "cm")) + 
+  scale_x_continuous(breaks=seq(2000,2018,1))  + 
+  scale_colour_manual(values = c("sky blue"))
+
+
+chla_pannel <- grid.arrange(GL4_chl_plot, GL1_chl_plot, ALB_chl_plot, nrow = 1, ncol=3)
+
+
+
+ggsave("chla_pannel.pdf", chla_pannel, scale = 2, width = 11, height = 4.25, units = c("cm"), dpi = 300)
+
+?grid.arrange
+
+
+
+
+
+
+
+
+
+
