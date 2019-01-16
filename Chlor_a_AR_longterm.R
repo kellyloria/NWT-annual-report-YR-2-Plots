@@ -812,13 +812,13 @@ chlora.mod2 <- lmer(chl_a ~ year + (1| local_site), data = newdat)
 summary(chlora.mod2)
 
 
-chlora.mod.gl4 <- lmer(chl_a ~ year + (1| location), data = CHdat_GL4)
+chlora.mod.gl4 <- lmer(chl_a ~ scale(year) + (1| location), data = CHdat_GL4)
 summary(chlora.mod.gl4)
 
-chlora.mod.alb <- glm(chl_a ~ year, data = CHdat_ALB)
+chlora.mod.alb <- glm(chl_a ~ scale(year), data = CHdat_ALB)
 summary(chlora.mod.alb)
 
-chlora.mod.gl1 <- glm(chl_a ~ year, data = CHdat_GL1)
+chlora.mod.gl1 <- glm(chl_a ~ scale(year), data = CHdat_GL1)
 summary(chlora.mod.gl1)
 
 
