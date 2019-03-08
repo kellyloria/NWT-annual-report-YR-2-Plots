@@ -512,3 +512,65 @@ NO3.mod_inlake_max <- lmer(NO3. ~ scale(sumallPC1) + (1|depth), data = all_NO3_m
 summary(NO3.mod_inlake_max) # year average not significant
 
 
+### WQ averages at 3 meters ###
+
+
+
+
+
+#Subset the data for GL4 observations with chla observations (>0)
+WCdat1 <- subset(WCdata, local_site=="GL4",
+                 select=local_site:date1)
+summary(WCdat1$local_site) #all set
+
+
+#Subset for all within lake observations (0-9m)
+WCdat_lake <- subset(WCdat1, location=="LAKE",
+                     select=local_site:date1)
+summary(WCdat_lake$location)
+
+#Subset for all within lake observations (3m)
+WCdat_3m <- subset(WCdat_lake, location=="LAKE" & depth  > 1 & depth < 7,
+                   select=local_site:date1)
+summary(WCdat_3m)
+
+
+mean(na.omit(WCdat_3m$NO3.))
+
+WCdata$local_site
+
+#Subset the data for GL4 observations with chla observations (>0)
+WCdatALB <- subset(WCdata, local_site=="ALB",
+                 select=local_site:date1)
+summary(WCdatALB$local_site) #all set
+
+
+#Subset for all within lake observations (0-9m)
+WCdatALB <- subset(WCdatALB, location=="LAKE",
+                     select=local_site:date1)
+summary(WCdatALB$location)
+
+#Subset for all within lake observations (3m)
+WCdatALB_3m <- subset(WCdatALB, location=="LAKE" & depth  > 1 & depth < 7,
+                   select=local_site:date1)
+summary(WCdatALB_3m$depth)
+mean(na.omit(WCdatALB_3m$NO3.))
+
+## gl1 
+#Subset the data for GL4 observations with chla observations (>0)
+WCdatGL1 <- subset(WCdata, local_site=="GL1",
+                   select=local_site:date1)
+summary(WCdatGL1$local_site) #all set
+
+
+#Subset for all within lake observations (0-9m)
+WCdatGL1 <- subset(WCdatGL1, location=="LAKE",
+                   select=local_site:date1)
+summary(WCdatGL1$location)
+
+#Subset for all within lake observations (3m)
+WCdatGL1_3m <- subset(WCdatGL1, location=="LAKE" & depth  > 1 & depth < 5,
+                      select=local_site:date1)
+summary(WCdatGL1_3m$depth)
+mean(na.omit(WCdatGL1_3m$NO3.))
+

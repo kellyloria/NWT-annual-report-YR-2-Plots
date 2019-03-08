@@ -868,6 +868,64 @@ ggsave("chla_pannel.pdf", chla_pannel, scale = 2, width = 11, height = 4.25, uni
 
 
 
+### WQ averages at 3 meters ###
+names(WQdata)
+#Subset the data for GL4 observations with chla observations (>0)
+WCdat1 <- subset(WQdata, local_site=="GL4",
+                 select=local_site:PAR)
+summary(WCdat1$local_site) #all set
+
+
+#Subset for all within lake observations (0-9m)
+WCdat_lake <- subset(WCdat1, location=="LAKE",
+                     select=local_site:PAR)
+summary(WCdat_lake$location)
+
+#Subset for all within lake observations (3m)
+WCdat_3m <- subset(WCdat_lake, location=="LAKE" & depth  > 1 & depth < 4,
+                   select=local_site:PAR)
+summary(WCdat_3m)
+
+
+mean(na.omit(WCdat_3m$PAR))
+
+WCdata$local_site
+
+#Subset the data for GL4 observations with chla observations (>0)
+WCdatALB <- subset(WQdata, local_site=="ALB",
+                   select=local_site:PAR)
+summary(WCdatALB$local_site) #all set
+
+
+#Subset for all within lake observations (0-9m)
+WCdatALB <- subset(WCdatALB, location=="LAKE",
+                   select=local_site:PAR)
+summary(WCdatALB$location)
+
+#Subset for all within lake observations (3m)
+WCdatALB_3m <- subset(WCdatALB, location=="LAKE" & depth  > 1 & depth < 4,
+                      select=local_site:PAR)
+summary(WCdatALB_3m$depth)
+mean(na.omit(WCdatALB_3m$PAR))
+
+## gl1 
+#Subset the data for GL4 observations with chla observations (>0)
+WCdatGL1 <- subset(WQdata, local_site=="GL1",
+                   select=local_site:PAR)
+summary(WCdatGL1$local_site) #all set
+
+
+#Subset for all within lake observations (0-9m)
+WCdatGL1 <- subset(WCdatGL1, location=="LAKE",
+                   select=local_site:PAR)
+summary(WCdatGL1$location)
+
+#Subset for all within lake observations (3m)
+WCdatGL1_3m <- subset(WCdatGL1, location=="LAKE" & depth  > 1 & depth < 4,
+                      select=local_site:PAR)
+summary(WCdatGL1_3m$depth)
+mean(na.omit(WCdatGL1_3m$PAR))
+
 
 
 

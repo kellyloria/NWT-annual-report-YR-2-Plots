@@ -295,3 +295,285 @@ dt1$taxon_dens
 
 zoop.mod_all <- glm(taxon_dens ~ scale(sumallPC1), data = comb_dat_all_raw)
 summary(zoop.mod_all)
+
+
+###### For city of Boulder meeting ####
+zoop1218 <- read.csv("glv_zoocomp.pj.data_CBM.csv", header=T, 
+                     na = c("NaN", "DNS",  "EQCL", "N/A", "NP", "NSS", "NV", "u", "QNS", NA, " ", ""))
+names(zoop1218)
+summary(zoop1218$local_site)
+
+Zdat_GL4 <- subset(zoop1218, local_site=="GL4",
+                    select=local_site:tot_density)
+summary(Zdat_GL4$taxon_name)
+summary(Zdat_GL4$local_site)
+
+Zdat1_GL4 <- subset(Zdat_GL4, taxon_name == "Total cladoceran"| taxon_name == "Total copepod",
+                   select=local_site:tot_density)
+summary(Zdat1_GL4$taxon_name)
+summary(Zdat1_GL4$local_site)
+
+
+Zdat_GL1 <- subset(zoop1218, local_site=="GL1",
+                    select=local_site:tot_density)
+summary(Zdat_GL1$local_site)
+Zdat1_GL1 <- subset(Zdat_GL1, taxon_name == "Total cladoceran"| taxon_name == "Total copepod",
+                    select=local_site:tot_density)
+summary(Zdat1_GL1$taxon_name)
+summary(Zdat1_GL1$local_site)
+
+
+
+Zdat_ALB <- subset(zoop1218, local_site=="ALB",
+                    select=local_site:tot_density)
+summary(Zdat_ALB$local_site)
+Zdat1_ALB <- subset(Zdat_ALB, taxon_name == "Total cladoceran"| taxon_name == "Total copepod",
+                    select=local_site:tot_density)
+summary(Zdat1_ALB$taxon_name)
+summary(Zdat1_ALB$local_site)
+
+
+
+ggplot(data = zoop1218, # data
+       aes(x = year, # aesthetics
+           y = tot_density, 
+           color = local_site)) + ylab("Zooplankton Density") + xlab("Year") +
+  geom_point() + geom_smooth(method = "lm") + scale_x_continuous(breaks=seq(2000,2018,2)) +
+  # geom 
+  facet_grid(~local_site) + # facet
+  scale_color_brewer(palette = "Set1") + 
+  theme_classic() + theme(text = element_text(size=14), 
+                          axis.text.x = element_text(angle=45, hjust=0.95),
+                          legend.position="none", 
+                          plot.margin = unit(c(0.15, 0,0.5,1.2), "cm")) 
+
+?scale_color_brewer
+
+
+
+ggsave("Chla_infocal_lakes_plot.pdf",
+       scale = 2, width = 13, height = 4.75, units = c("cm"), dpi = 300)
+
+
+
+####### individual lake as plot ######
+######################################
+names(Zdat_GL4)
+
+range(na.omit((Zdat1_GL4$taxon_dens)))
+GL4_z_plot <- ggplot(Zdat1_GL4, aes(x = year, y = taxon_dens)) + ylab("Taxa density") + xlab("Year") + ggtitle("GL4") +
+  geom_point(aes(colour = as.factor(taxon_name))) + geom_smooth(method = "glm", colour = 'grey30') +
+  theme_classic() + theme(text = element_text(size=14),
+                          axis.text.x=element_text(angle=45, hjust=0.95),
+                          legend.position="none", 
+                          plot.margin = unit(c(0.15, 0,0.5,0.3), "cm")) + 
+  scale_x_continuous(breaks=seq(2012,2018,1))  + 
+  scale_y_continuous(breaks=seq(0,50,10), limits=c(0, 50)) +
+  scale_colour_manual(values = c("goldenrod", "firebrick2"))
+
+ggsave("GL4_z_plot.pdf", GL4_z_plot, scale = 2, width = 5, height = 4.5, units = c("cm"), dpi = 300)
+
+GL4_tz_mod <- glm(taxon_dens ~ scale(year) + taxon_name, data = Zdat1_GL4)
+summary(GL4_tz_mod)
+
+GL4_tz_mod2 <- glm(taxon_dens ~ scale(year), data = Zdat1_GL4)
+summary(GL4_tz_mod2)
+
+GL4_tz_mod3 <- lmer(tot_density ~ scale(year) + (1|taxon_name), data = Zdat1_GL4)
+summary(GL4_tz_mod3)
+
+
+GL4_z_plot2 <- ggplot(Zdat1_GL4, aes(x = year, y = taxon_dens)) + ylab("Taxa density") + xlab("Year") + ggtitle("GL4") +
+  geom_point(aes(colour = as.factor(taxon_name))) + geom_smooth(method = "glm", colour = 'grey30') +
+  theme_classic() + theme(text = element_text(size=14),
+                          axis.text.x=element_text(angle=45, hjust=0.95),
+                          legend.position="none", 
+                          plot.margin = unit(c(0.15, 0,0.5,0.3), "cm")) + 
+  scale_x_continuous(breaks=seq(2012,2018,1)) +
+  scale_colour_manual(values = c("goldenrod", "firebrick2"))
+
+ggsave("GL4_z_plot2.pdf", GL4_z_plot2, scale = 2, width = 5, height = 4.5, units = c("cm"), dpi = 300)
+
+
+range(na.omit((Zdat1_GL1$taxon_dens)))
+GL1_z_plot <- ggplot(Zdat1_GL1, aes(x = year, y = taxon_dens)) + ylab("Taxa density") + xlab("Year") + ggtitle("GL1") +
+  geom_point(aes(colour = as.factor(taxon_name))) + 
+  theme_classic() + theme(text = element_text(size=14),
+                          axis.text.x=element_text(angle=45, hjust=0.95),
+                          axis.title.y=element_blank(),
+                          legend.position="none", 
+                          plot.margin = unit(c(0.15, 0,0.5,0.3), "cm")) + 
+  scale_x_continuous(breaks=seq(2014,2018,1)) +
+  scale_y_continuous(breaks=seq(0,50,10), limits=c(0, 50)) +
+  scale_colour_manual(values = c("goldenrod", "firebrick2"))
+
+ggsave("GL1_z_plot.pdf", GL1_z_plot, scale = 2, width = 4, height = 4.5, units = c("cm"), dpi = 300)
+
+
+GL1_tz_mod <- lmer(taxon_dens ~ scale(year) + (1|taxon_name), data = Zdat_GL1)
+summary(GL1_tz_mod)
+
+GL1_tz_mod2 <- glm(taxon_dens ~ scale(year) + taxon_name, data = Zdat1_GL1)
+summary(GL1_tz_mod2)
+
+GL1_tz_mod3 <- glm(tot_density ~ scale(year), data = Zdat1_GL1)
+summary(GL1_tz_mod3)
+
+GL1_tz_mod4 <- lmer(tot_density ~ scale(year) + (1|taxon_name) + (1|date_collected), data = Zdat_GL1)
+summary(GL1_tz_mod4)
+
+range(na.omit((Zdat1_ALB$taxon_dens)))
+ALB_z_plot <- ggplot(Zdat1_ALB, aes(x = year, y = taxon_dens)) + ylab("Chla") + xlab("Year") + ggtitle("Albion") +
+  geom_point(aes(colour = as.factor(taxon_name))) + geom_smooth(method = "glm", colour = 'grey30') +
+  theme_classic() + theme(text = element_text(size=14),
+                          axis.text.x=element_text(angle=45, hjust=0.95),
+                          axis.title.y=element_blank(),
+                          legend.position="none", 
+                          plot.margin = unit(c(0.15, 0,0.5,0.3), "cm"))+ 
+  scale_x_continuous(breaks=seq(2000,2018,1)) +
+  scale_y_continuous(breaks=seq(0,50,10)) +
+  scale_colour_manual(values = c("goldenrod", "firebrick2"))
+
+ALB_tz_mod <- lmer(taxon_dens ~ scale(year) + (1|taxon_name), data = Zdat_ALB)
+summary(ALB_tz_mod)
+
+ALB_tz_mod2 <- glm(taxon_dens ~ scale(year) + taxon_name, data = Zdat1_ALB)
+summary(ALB_tz_mod2)
+
+ALB_tz_mod4 <- lmer(tot_density ~ scale(year) + (1|taxon_name) + (1|date_collected), data = Zdat_ALB)
+summary(ALB_tz_mod4)
+
+ggsave("ALB_z_plot.pdf", ALB_z_plot, scale = 2, width = 3, height = 4.5, units = c("cm"), dpi = 300)
+
+
+
+### size of each taxa in each lake over time 
+Zdat1_GL4$avg_taxon_length
+hist(Zdat1_GL4$year)
+GL4_zsz_plot2 <- ggplot(Zdat1_GL4, aes(x = year, y = avg_taxon_length)) + ylab("Average taxa size (mm)") + xlab("Year") + ggtitle("GL4") +
+  geom_point(aes(colour = as.factor(taxon_name))) + #geom_smooth(method = "glm", colour = 'grey30') +
+  theme_classic() + theme(text = element_text(size=14),
+                          axis.text.x=element_text(angle=45, hjust=0.95),
+                          legend.position="none", 
+                          plot.margin = unit(c(0.15, 0,0.5,0.3), "cm")) + 
+  scale_x_continuous(breaks=seq(2012,2018,1)) +
+  scale_colour_manual(values = c("goldenrod", "firebrick2"))
+
+ggsave("GL4_size_plot2.pdf", GL4_zsz_plot2, scale = 2, width = 5, height = 4.5, units = c("cm"), dpi = 300)
+
+GL4_sz_mod3 <- lmer(avg_taxon_length ~ scale(year) + (1|taxon_name), data = Zdat1_GL4)
+summary(GL4_sz_mod3)
+
+
+GL1_zsz_plot2 <- ggplot(Zdat1_GL1, aes(x = year, y = avg_taxon_length)) + ylab("Average taxa size (mm)") + xlab("Year") + ggtitle("GL1") +
+  geom_point(aes(colour = as.factor(taxon_name))) + geom_smooth(method = "glm", colour = 'grey30') +
+  theme_classic() + theme(text = element_text(size=14),
+                          axis.text.x=element_text(angle=45, hjust=0.95),
+                          legend.position="none", 
+                          plot.margin = unit(c(0.15, 0,0.5,0.3), "cm")) + 
+  scale_x_continuous(breaks=seq(2012,2018,1)) +
+  scale_colour_manual(values = c("goldenrod", "firebrick2"))
+
+ggsave("GL1_zsz_plot2.pdf", GL1_zsz_plot2, scale = 2, width = 4, height = 4.5, units = c("cm"), dpi = 300)
+
+GL1_sz_mod3 <- lmer(avg_taxon_length ~ scale(year) + (1|taxon_name), data = Zdat1_GL1)
+summary(GL1_sz_mod3)
+
+
+
+AL1_zsz_plot2 <- ggplot(Zdat1_ALB, aes(x = year, y = avg_taxon_length)) + ylab("Average taxa size (mm)") + xlab("Year") + ggtitle("ALB") +
+  geom_point(aes(colour = as.factor(taxon_name))) + #geom_smooth(method = "glm", colour = 'grey30') +
+  theme_classic() + theme(text = element_text(size=14),
+                          axis.text.x=element_text(angle=45, hjust=0.95),
+                          legend.position="none", 
+                          plot.margin = unit(c(0.15, 0,0.5,0.3), "cm")) + 
+  scale_x_continuous(breaks=seq(2012,2018,1)) +
+  scale_colour_manual(values = c("goldenrod", "firebrick2"))
+
+ggsave("Zdat1_ALB.pdf", AL1_zsz_plot2, scale = 2, width = 3, height = 4.5, units = c("cm"), dpi = 300)
+
+ALB_sz_mod3 <- lmer(avg_taxon_length ~ scale(year) + (1|taxon_name), data = Zdat1_ALB)
+summary(ALB_sz_mod3)
+
+
+
+###### For city of Boulder meeting ####
+wzoop1218 <- read.csv("glv.winter.zcomp.pj.data_CBM.csv", header=T, 
+                     na = c("NaN", "DNS",  "EQCL", "N/A", "NP", "NSS", "NV", "u", "QNS", NA, " ", ""))
+names(wzoop1218)
+
+Zdat1w_GL4 <- subset(wzoop1218, taxon_name == "Total cladoceran"| taxon_name == "Total copepod",
+                    select=local_site:tot_density)
+summary(Zdat1w_GL4$taxon_name)
+summary(Zdat1_GL4$local_site)
+Zdat1w_GL4$season <- "winter"
+
+names(Zdat1w_GL4)
+names(Zdat1_GL4)
+
+
+Zdat1_GL4$season <- "summer"
+newdat <- rbind(Zdat1w_GL4, Zdat1_GL4)
+
+
+GL4_wz_plot <- ggplot(newdat, aes(x = season, y = avg_taxon_length)) + ylab("Taxa size (mm)")  +
+  geom_jitter(width = 0.2, height = 0.3, size = 2.5, aes(colour = as.factor(season), shape=as.factor(taxon_name))) +
+  theme_classic() + theme(text = element_text(size=14),
+                          axis.text.x=element_text(vjust=0.95),
+                          plot.margin = unit(c(0.15, 0,0.5,0.3), "cm")) + 
+  scale_y_continuous(breaks=seq(0,5,0.5)) 
+
+
+
+ggsave("GL4_wsz_plot.pdf", GL4_wz_plot, scale = 2, width = 7, height = 4.5, units = c("cm"), dpi = 300)
+
+newdat$avg_taxon_length
+
+GL4_zsizw_plot <- ggplot(newdat, aes(x = year, y = avg_taxon_length)) + ylab("Average taxa size (mm)") + xlab("Year") + ggtitle("GL4") +
+  geom_jitter(width = 0.2, height = 0.3, size = 4, aes(colour = as.factor(season), shape=as.factor(taxon_name)))
+  theme_classic() + theme(text = element_text(size=14), legend.position="none",
+                          axis.text.x=element_text(angle=45, hjust=0.95), 
+                          plot.margin = unit(c(0.15, 0,0.5,0.3), "cm")) + 
+  scale_x_continuous(breaks=seq(2012,2018,1))  +
+  scale_colour_manual(values = c("goldenrod", "firebrick2"))
+
+
+ggsave("GL4_wzsize_plot.pdf", GL4_zsizw_plot, scale = 2, width = 5, height = 4.5, units = c("cm"), dpi = 300)
+
+names(zoop1218)
+GL4_zsz_plot2 <- ggplot(zoop1218, aes(x = year, y = avg_taxon_length)) + ylab("Average taxa size (mm)") + xlab("Year") + ggtitle("GL4") +
+  geom_point(aes(colour = as.factor(local_site))) + #geom_smooth(method = "glm", colour = 'grey30') +
+  theme_classic() + theme(text = element_text(size=14),
+                          axis.text.x=element_text(angle=45, hjust=0.95), 
+                          plot.margin = unit(c(0.15, 0,0.5,0.3), "cm")) + 
+  scale_x_continuous(breaks=seq(2012,2018,1)) +
+  scale_colour_manual(values = c("goldenrod", "firebrick2"))
+
+summary(zoop1218$taxon_name)
+taxonsz <- subset(zoop1218, taxon_name == "Diacyclops thomasi"| taxon_name == "Hesperodiaptomus shoshone" 
+                  | taxon_name == "Holopedium gibberum"| taxon_name == "Daphnia pulicaria" 
+                  | taxon_name == "Daphnia rosea",
+                    select=local_site:tot_density)
+
+names(taxonsz)
+
+GL4_zden_plot2 <- ggplot(taxonsz, aes(x = local_site, y = taxon_dens)) + ylab("Taxon density (perL)") +
+  geom_jitter(width = 0.3, height = 0.7, size = 3, aes(colour = as.factor(local_site), shape=as.factor(taxon_name))) + #geom_smooth(method = "glm", colour = 'grey30') +
+  theme_classic() + theme(text = element_text(size=14),
+                          axis.text.x=element_text(vjust=0.95), 
+                          plot.margin = unit(c(0.15, 0,0.5,0.5), "cm")) + 
+  scale_y_continuous(breaks=seq(0,35,5))
+GL4_zsz_plot2 + scale_colour_discrete(breaks=c("Green5", "Green4", "Green3", "Green2", "Green1", "Albion", "Silver"))
+ggsave("GL4_zden_plot.pdf", GL4_zden_plot2, scale = 2, width = 12, height = 2.9, units = c("cm"), dpi = 300)
+
+GL4_zsize_plot2 <- ggplot(taxonsz, aes(x = local_site, y = avg_taxon_length)) + ylab("Taxon density (perL)") +
+  geom_jitter(width = 0.3, height = 0.7, size = 3, aes(colour = as.factor(local_site), shape=as.factor(taxon_name))) + #geom_smooth(method = "glm", colour = 'grey30') +
+  theme_classic() + theme(text = element_text(size=14),
+                          axis.text.x=element_text(vjust=0.95), 
+                          plot.margin = unit(c(0.15, 0,0.5,0.5), "cm")) + 
+  scale_y_continuous(breaks=seq(0,3,0.5))
+GL4_zsz_plot2 + scale_colour_discrete(breaks=c("Green5", "Green4", "Green3", "Green2", "Green1", "Albion", "Silver"))
+ggsave("GL4_zsize_plot.pdf", GL4_zsize_plot2, scale = 2, width = 12, height = 2.9, units = c("cm"), dpi = 300)
+
+
+
